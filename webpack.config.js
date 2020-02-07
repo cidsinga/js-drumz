@@ -1,9 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const SRC = path.resolve(__dirname, 'src/js');
-const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: './src/main.js',
@@ -15,9 +14,14 @@ module.exports = {
   devServer: {
     contentBase: './dist'
   },
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin({
+        test: /\.js(\?.*)?$/i,
+        sourceMap: true
+      })],
+  },
   plugins: [
-    new Dotenv(),
-    new UglifyJsPlugin({ sourceMap: true }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'TITLE',
